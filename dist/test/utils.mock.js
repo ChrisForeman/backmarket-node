@@ -1,20 +1,20 @@
-import { CatalogFields } from "../../src/common/types"
-
-
-export const getCatalogString = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getCatalogString = void 0;
+exports.getCatalogString = {
     single: {
-        mock: (): CatalogFields => {
+        mock: () => {
             return {
                 sku: 'SKU_1',
                 price: 100
-            }
+            };
         },
-        expected: (): string => {
-            return ''
+        expected: () => {
+            return `sku;price;\nSKU_1;100;`;
         }
     },
     multi: {
-        mock: (): CatalogFields[] => {
+        mock: () => {
             return [
                 {
                     sku: 'SKU_1',
@@ -32,10 +32,20 @@ export const getCatalogString = {
                     sku: 'SKU_4',
                     price: 25
                 }
-            ]
+            ];
         },
-        expected: (): string => {
-            return ''
+        expected: () => {
+            return 'sku;price;\nSKU_1;100;\nSKU_2;75;\nSKU_3;50;\nSKU_4;25;';
+        }
+    },
+    delimiter: {
+        expected: () => {
+            return `sku,price,\nSKU_1,100,`;
+        }
+    },
+    heteroEntries: {
+        mock: () => {
+            return [];
         }
     }
-}
+};

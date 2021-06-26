@@ -1,6 +1,6 @@
-import { Language, BuyBoxPage, CatalogFields } from "./common/types"
+import { Language, BuyBoxPage, CatalogFields } from "./types"
 import axios from 'axios'
-import { getCatalogString } from "./common/utils"
+import { getCatalogString } from "./utils"
 
 
 export class BackMarketAPI {
