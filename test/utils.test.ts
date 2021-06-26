@@ -25,7 +25,6 @@ describe(`Common`, () => {
             const mockData = utilsMock.getCatalogString.heteroEntries.mock()
             const expected = utilsMock.getCatalogString.heteroEntries.expected()
             const actual = getCatalogString(mockData, ';')
-            console.log(actual)
             assert.strictEqual(actual, expected)
         })
 
