@@ -1,7 +1,7 @@
 
 
 
-export enum Language {
+export enum CountryCode {
     France = 'fr-fr',
     Spain = 'es-es',
     Germany = 'de-de',

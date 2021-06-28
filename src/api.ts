@@ -1,4 +1,4 @@
-import { Language, BuyBoxPage, CatalogFields } from "./types"
+import { CountryCode, BuyBoxPage, CatalogFields } from "./types"
 import axios from 'axios'
 import { getCatalogString } from "./utils"
 
@@ -17,7 +17,7 @@ export class BackMarketAPI {
 
     constructor(
         websiteURL: string,
-        language: Language,
+        countryCode: CountryCode,
         userAgent: string,
         accessToken: string
     ) {
@@ -25,7 +25,7 @@ export class BackMarketAPI {
         this.headers = {
             'Content-type': 'application/json',
             'Accept': 'application/json',
-            'Accept-Language': language,
+            'Accept-Language': countryCode,
             'Authorization': `Basic ${accessToken}`,
             'User-Agent': userAgent
         }
