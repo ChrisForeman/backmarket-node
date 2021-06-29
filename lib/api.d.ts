@@ -37,6 +37,37 @@ export declare class BackMarketAPI {
      */
     getBuyboxData(page: number): Promise<BuyboxPage>;
     /**
+     * This method uses a modified binary search approach to calculate the next page that should be requested.
+     * @param high The highest pages that may be the last buybox page.
+     * @param low The lowest page that may be the last buybox page.
+     * @param target The page that was requested.
+     * @param exists A boolean that is true if the target page exists.
+     * @returns Returns the next page that should be requested.
+     */
+    private nextTarget;
+    /**
+     * Helper method that requests buy box pages until it finds the last one.
+     * Since we don't have a known range for how many buybox pages exist it requests pages in a modified binary search fashion
+     * and converges on the last page with every request.
+     * @param estPages The estimated amount of buybox pages the seller has.
+     * @param maxPages The max amount of pages to request for. The default value is infinity.
+     * @returns The last page for buybox data, a set of failed page numbers, and the buybox data that was retrieved while searching since this endpoint can only be called once per hour per page.
+     */
+    private getLastBuyBoxPage;
+    /**
+     * Convenience method for getting mutiple/all pages of buybox data in one async method call.
+     * If maxPages is not set, this method will get all available buybox pages.
+     * @param estPages The estimated number of buybox pages the seller has.
+     * @param maxPages The maximum number of pages to get.
+     * @returns The last page for buybox data, a set of failed page numbers, and the buybox
+     * data that was retrieved while searching since this endpoint can only be called once per hour per page.
+     */
+    getAllBuyboxData(estPages: number, maxPages?: number): Promise<{
+        pages: BuyboxPage[];
+        validFailedPages: Set<number>;
+        lastPage: number;
+    }>;
+    /**
      * This method is for updating multiple listings in one request.
      * NOTE: Not all fields present in one listing need to be present for another listing in the array.
      * (quantity can be undefined in one element while quantity is undefined in another)
