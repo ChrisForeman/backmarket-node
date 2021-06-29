@@ -59,8 +59,8 @@ export class BackMarketAPI {
         return {
             pageNumber: pageNum,
             pageCount: page.count,
-            nextPage: page.next !== undefined ? pageNum + 1 : undefined,
-            prevPage: page.previous !== undefined ? pageNum - 1 : undefined,
+            nextPage: page.next != undefined ? pageNum + 1 : undefined, //Don't use strict equal
+            prevPage: page.previous != undefined ? pageNum - 1 : undefined, //Don't use strict equal
             results: page.results.map(this.mapBuyboxData)
         }
     }
