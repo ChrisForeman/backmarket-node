@@ -12,6 +12,7 @@
 - [ ] Get category branch
 - [ ] Get my listings
 - [x] Get buybox data
+- [ ] Get all buybox data
 - [ ] Get specific listing
 - [ ] Get my orders
 - [ ] Get specific order

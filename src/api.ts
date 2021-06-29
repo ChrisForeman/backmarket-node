@@ -1,7 +1,7 @@
 import { CatalogFields, BuyBoxPageResponse, RawBuyBoxListing } from "./interal-types"
 import axios from 'axios'
 import { getCatalogString } from "./utils"
-import { BuyboxListing, BuyboxPage, CountryCode } from "."
+import { BuyboxListing, BuyboxPage, CountryCode, ErrorCode } from "."
 
 
 export class BackMarketAPI {
@@ -97,6 +97,112 @@ export class BackMarketAPI {
             const data = resp.data as BuyBoxPageResponse
             return this.mapBuyboxPage(page, data)
         }).catch(this.transformErr)
+    }
+
+
+    /**
+     * This method uses a modified binary search approach to calculate the next page that should be requested.
+     * @param high The highest pages that may be the last buybox page.
+     * @param low The lowest page that may be the last buybox page.
+     * @param target The page that was requested.
+     * @param exists A boolean that is true if the target page exists.
+     * @returns Returns the next page that should be requested.
+     */
+    private nextTarget(high: number, low: number, target: number, exists: boolean): number {
+        if (exists) {
+            //Because the range between target and high may initially be astronomical,
+            //we will consider the new target to be double its current value.
+            const maxNewTarget = high - Math.trunc((high - target) / 2)
+            return Math.min(target * 2, maxNewTarget)
+        } else {
+            return target - Math.trunc((target - low) / 2)
+        }
+    }
+
+    /**
+     * Helper method that requests buy box pages until it finds the last one.
+     * Since we don't have a known range for how many buybox pages exist it requests pages in a modified binary search fashion 
+     * and converges on the last page with every request. 
+     * @param estPages The estimated amount of buybox pages the seller has.
+     * @param maxPages The max amount of pages to request for. The default value is infinity.
+     * @returns The last page for buybox data, a set of failed page numbers, and the buybox data that was retrieved while searching since this endpoint can only be called once per hour per page.
+     */
+    private async getLastBuyBoxPage(estPages?: number, maxPages?: number): Promise<{
+        pages: BuyboxPage[],
+        validFailedPages: Set<number>,
+        lastPage: number
+    }> {
+        let high = maxPages ?? Number.MAX_SAFE_INTEGER
+        let low = 1
+        let targetPage = estPages ?? 10
+
+        const pages: BuyboxPage[] = []
+        const validFailedPages = new Set<number>() //Failed pages that exist.
+
+        while (high - low > 1) {
+            let pageExists = true
+            await this.getBuyboxData(targetPage).then(data => {
+                pages.push(data)
+            }).catch(err => {
+                if (err.code === ErrorCode.tooManyCalls) { //Only error code that proves the page exists.
+                    validFailedPages.add(targetPage)
+                } else {
+                    pageExists = false
+                }
+            })
+
+            const newTarget = this.nextTarget(high, low, targetPage, pageExists)
+
+            newTarget > targetPage ? low = targetPage : high = targetPage
+
+            targetPage = newTarget
+        }
+
+        return Promise.resolve({
+            pages: pages,
+            validFailedPages: validFailedPages,
+            lastPage: targetPage
+        })
+    }
+
+
+    /**
+     * Convenience method for getting mutiple/all pages of buybox data in one async method call.
+     * If maxPages is not set, this method will get all available buybox pages.
+     * @param estPages The estimated number of buybox pages the seller has.
+     * @param maxPages The maximum number of pages to get.
+     * @returns The last page for buybox data, a set of failed page numbers, and the buybox
+     * data that was retrieved while searching since this endpoint can only be called once per hour per page.
+     */
+    async getAllBuyboxData(estPages: number, maxPages?: number): Promise<{
+        pages: BuyboxPage[];
+        validFailedPages: Set<number>;
+        lastPage: number;
+    }> {
+
+        const results = await this.getLastBuyBoxPage(estPages, maxPages)
+
+        //Fill in pages that weren't retrieved when calculating the valid page range.
+
+        const pageNums: number[] = Array.from(Array(results.lastPage).keys())
+        pageNums.shift() //Start page at one and remove an element.
+
+        const requestedPages: Set<number> = Object.assign({}, results.validFailedPages)
+        results.pages.forEach(page => { requestedPages.add(page.pageNumber) })
+
+        await Promise.all(pageNums.map(pageNum => {
+            if (!requestedPages.has(pageNum)) {
+                return this.getBuyboxData(pageNum).then(data => {
+                    results.pages.push(data)
+                }).catch(() => {
+                    results.validFailedPages.add(pageNum)
+                })
+            } else {
+                return Promise.resolve()
+            }
+        }))
+
+        return results
     }
 
     /**
