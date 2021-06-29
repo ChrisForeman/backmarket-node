@@ -1,26 +1,14 @@
 
 
 
-export enum CountryCode {
-    France = 'fr-fr',
-    Spain = 'es-es',
-    Germany = 'de-de',
-    Austria = 'de-at',
-    Italy = 'it-it',
-    UnitedKingdom = 'en-gb',
-    Netherlands = 'nl-nl',
-    UnitedStates = 'en-us'
-}
-
-
-export interface BuyBoxPage {
+export interface BuyBoxPageResponse {
     count: number
     next?: string
     previous?: string
-    results: BuyBoxListing[]
+    results: RawBuyBoxListing[]
 }
 
-export interface BuyBoxListing {
+export interface RawBuyBoxListing {
     product: number
     sku: string,
     quantity: number

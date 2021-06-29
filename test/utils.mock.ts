@@ -1,4 +1,4 @@
-import { CatalogFields } from "../src/types"
+import { CatalogFields } from "../src/index"
 
 
 export const getCatalogString = {

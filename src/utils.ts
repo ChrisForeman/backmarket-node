@@ -1,4 +1,4 @@
-import { CatalogFields } from './types'
+import { CatalogFields } from './interal-types'
 
 export function getCatalogString(items: CatalogFields[], delimiter: string): string {
     const set = new Set<string>()
