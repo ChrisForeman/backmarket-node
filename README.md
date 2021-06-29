@@ -1,4 +1,5 @@
 
+#### :warning: This module is in early development stages and should not be used in production code! :warning:
 
 ## Description
 
