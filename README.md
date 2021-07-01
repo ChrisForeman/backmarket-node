@@ -23,7 +23,7 @@
 - [ ] Create products
 - [ ] Create listings
 - [ ] Update products
-- [ ] Update specific listing
+- [x] Update specific listing
 - [ ] Update serveral listings
 - [ ] Update orderlines
 - [ ] Upload clients' invoices

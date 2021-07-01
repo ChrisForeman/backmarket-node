@@ -1,4 +1,4 @@
-import { CatalogFields, BuyBoxPageResponse, RawBuyBoxListing } from "./interal-types"
+import { CatalogFields, BuyBoxPageResponse, RawBuyBoxListing, UpdateListingFields } from "./interal-types"
 import axios from 'axios'
 import { getCatalogString } from "./utils"
 import { BuyboxListing, BuyboxPage, CountryCode, ErrorCode } from "."
@@ -205,8 +205,27 @@ export class BackMarketAPI {
         return results
     }
 
+
+    /**
+     * Method for updating properties of a product listing.
+     * @param listingID Unique listing ID provided by Back Market.
+     * @param fields Fields to update in the listing. 
+     * @returns An empty promise on success.
+     */
+    updateListing(listingID: number, fields: UpdateListingFields): Promise<void> {
+        return axios.post(
+            `${this.rootEndpoint}/ws/listings/${listingID}`,
+            fields,
+            { headers: this.headers }
+        ).then(() => {
+            return //To prevent the axios response from being returned
+        }).catch(this.transformErr)
+    }
+
     /**
      * This method is for updating multiple listings in one request.
+     * NOTE: This method is not as efficient as single listing and won't be in real time.
+     * It is also not recommended to update stock with this method. 
      * NOTE: Not all fields present in one listing need to be present for another listing in the array. 
      * (quantity can be undefined in one element while quantity is undefined in another)
      * @param fields An array where each element is an object containing all of the available fields that may be updated for each listing.
