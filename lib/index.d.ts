@@ -34,5 +34,5 @@ export interface BuyboxListing {
     currency: string;
     condition: number;
 }
-import { CatalogFields } from "./interal-types";
-export { CatalogFields };
+import { CatalogFields, UpdateListingFields } from "./interal-types";
+export { CatalogFields, UpdateListingFields };

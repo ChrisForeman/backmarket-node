@@ -40,8 +40,9 @@ export interface BuyboxListing {
     condition: number
 }
 
-import { CatalogFields } from "./interal-types";
+import { CatalogFields, UpdateListingFields } from "./interal-types";
 
 export {
-    CatalogFields
+    CatalogFields,
+    UpdateListingFields
 }
