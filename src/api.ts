@@ -59,8 +59,8 @@ export class BackMarketAPI {
         return {
             pageNumber: pageNum,
             pageCount: page.count,
-            nextPage: page.next != undefined ? pageNum + 1 : undefined, //Don't use strict equal
-            prevPage: page.previous != undefined ? pageNum - 1 : undefined, //Don't use strict equal
+            nextPage: page.next != undefined ? pageNum + 1 : undefined, //Don't use strict equal since value could be null
+            prevPage: page.previous != undefined ? pageNum - 1 : undefined, //Don't use strict equal since value could be null
             results: page.results.map(this.mapBuyboxData)
         }
     }
@@ -187,9 +187,12 @@ export class BackMarketAPI {
         const pageNums: number[] = Array.from(Array(results.lastPage).keys())
         pageNums.shift() //Start page at one and remove an element.
 
-        const requestedPages: Set<number> = Object.assign({}, results.validFailedPages)
+        const requestedPages = new Set<number>()
+        //Add these to pages we already requested so we don't request them again.
         results.pages.forEach(page => { requestedPages.add(page.pageNumber) })
+        results.validFailedPages.forEach(page => { requestedPages.add(page) })
 
+        //Go through all possible pages and only request the ones that haven't been requested.
         await Promise.all(pageNums.map(pageNum => {
             if (!requestedPages.has(pageNum)) {
                 return this.getBuyboxData(pageNum).then(data => {
