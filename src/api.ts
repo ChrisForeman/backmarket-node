@@ -1,6 +1,10 @@
 import { BackMarketAPIInterface } from "./api-interface"
 import * as axios from 'axios'
 import { CountryCode } from "./enums"
+import { BuyBoxData, Category, OrderLineUpdateData } from "./types"
+import { ResponseMapper } from "./response-mapper"
+import { indexArray } from "./utils"
+
 
 export class BackMarketAPI implements BackMarketAPIInterface {
 
@@ -13,6 +17,8 @@ export class BackMarketAPI implements BackMarketAPIInterface {
      * Headers that will be used in each request, since each request requires the same headers.
      */
     private headers: Record<string, string>
+
+    private mapper: ResponseMapper
 
     constructor(
         websiteURL: string,
@@ -28,6 +34,7 @@ export class BackMarketAPI implements BackMarketAPIInterface {
             'Authorization': `Basic ${accessToken}`,
             'User-Agent': userAgent
         }
+        this.mapper = new ResponseMapper()
     }
 
     getCategoryTree(): Promise<Category[]> {
@@ -39,95 +46,62 @@ export class BackMarketAPI implements BackMarketAPIInterface {
         })
     }
 
-    getCategoryBranch(categoryId: string): Promise<Category> {
-        throw new Error("Method not implemented.")
+    async getBuyBoxDataRange(startPage: number, endPage?: number): Promise<{ count: number, results: BuyBoxData[] }> {
+        if (endPage === undefined) {
+            const firstPage = await this.getBuyBoxData(startPage)
+            const pageSize = 10
+            const newStartPage = startPage + 1
+            const newEndPage = Math.trunc(firstPage.count / 10) + 1
+            const pageNums = indexArray(newStartPage, newEndPage - newStartPage + 1)
+            const buyBoxPages = await Promise.all(pageNums.map(page => this.getBuyBoxData(page)))
+            return this.condenseBuyBoxPages(buyBoxPages)
+        } else {
+            if (startPage < endPage) {
+                throw new Error('End page cannot be less than start page.')
+            }
+            const pageNums = indexArray(startPage, endPage - startPage + 1)
+            const buyBoxPages = await Promise.all(pageNums.map(page => this.getBuyBoxData(page)))
+            return this.condenseBuyBoxPages(buyBoxPages)
+        }
     }
-    getListingsAll(params: { publicationState?: number, minQuantity?: number, maxQuantity?: number, }): Promise<Listing[]> {
-        throw new Error("Method not implemented.")
+
+    private condenseBuyBoxPages(pages: { count: number, results: BuyBoxData[] }[]): { count: number, results: BuyBoxData[] } {
+        let count = 0
+        const results: BuyBoxData[] = []
+
+        pages.forEach(page => {
+            count = page.count
+            page.results.forEach(pageResult => {
+                results.push(pageResult)
+            })
+        })
+        return {
+            count: count,
+            results: results
+        }
     }
-    getListingsRange(params: { startPage: number, endPage?: number, publicationState?: number, minQuantity?: number, maxQuantity?: number, }): Promise<Listing[]> {
-        throw new Error("Method not implemented.")
+
+    getBuyBoxData(page: number): Promise<{ count: number, results: BuyBoxData[] }> {
+        return axios.default.get(
+            `${this.rootEndpoint}/ws/listings_bi/?page=${page}`,
+            { headers: this.headers }
+        ).then(res => {
+            return {
+                count: res.data.count,
+                results: res.data.results.map((buybox: any) => this.mapper.mapBuyBox(buybox))
+            }
+        }).catch(err => {
+            throw this.mapper.mappErr(err)
+        })
     }
-    getListingsPage(params: { page: number, publicationState?: number, minQuantity?: number, maxQuantity?: number, }): Promise<Listing[]> {
-        throw new Error("Method not implemented.")
+
+    async updateOrderLine(orderLineId: number, data: OrderLineUpdateData): Promise<void> {
+        await axios.default.post(
+            `${this.rootEndpoint}/ws/orderlines/${orderLineId}`,
+            data,
+            { headers: this.headers }
+        )
     }
-    getBuyBoxDataAll(): Promise<BuyBoxData[]> {
-        throw new Error("Method not implemented.")
-    }
-    getBuyBoxDataRange(startPage: number, endPage?: number): Promise<BuyBoxData[]> {
-        throw new Error("Method not implemented.")
-    }
-    getBuyBoxDataPage(page: number): Promise<BuyBoxData[]> {
-        throw new Error("Method not implemented.")
-    }
-    getListingById(listingId: number): Promise<Listing> {
-        throw new Error("Method not implemented.")
-    }
-    getListingBySku(sku: string): Promise<Listing> {
-        throw new Error("Method not implemented.")
-    }
-    getOrdersAll(params: { creationDate?: Date, paymentDate?: Date, modificationDate?: Date, countryCode?: any, state?: any, pageSize?: number, }): Promise<Order> {
-        throw new Error("Method not implemented.")
-    }
-    getOrdersRange(params: { page: number, creationDate?: Date, paymentDate?: Date, modificationDate?: Date, countryCode?: any, state?: any, pageSize?: number, }): Promise<Order> {
-        throw new Error("Method not implemented.")
-    }
-    getOrdersPage(params: { startPage: number, endPage?: number, creationDate?: Date, paymentDate?: Date, modificationDate?: Date, countryCode?: any, state?: any, pageSize?: number, }): Promise<Order> {
-        throw new Error("Method not implemented.")
-    }
-    getOrder(orderId: number): Promise<Order> {
-        throw new Error("Method not implemented.")
-    }
-    getBatch(batchID: number): Promise<any> {
-        throw new Error("Method not implemented.")
-    }
-    getRepairReturnsAll(): Promise<any[]> {
-        throw new Error("Method not implemented.")
-    }
-    getRepairReturnsRange(startPage: number, endPage?: number): Promise<any[]> {
-        throw new Error("Method not implemented.")
-    }
-    getRepairReturnsPage(page: number): Promise<any[]> {
-        throw new Error("Method not implemented.")
-    }
-    createListings(data: ListingCreationData[]): Promise<void> {
-        throw new Error("Method not implemented.")
-    }
-    updateListing(listingId: number, data: ListingUpdateData): Promise<void> {
-        throw new Error("Method not implemented.")
-    }
-    updateListingsBatch(data: ListingUpdateData[]): Promise<void> {
-        throw new Error("Method not implemented.")
-    }
-    updateOrder(orderId: number, data: OrderUpdateData): Promise<void> {
-        throw new Error("Method not implemented.")
-    }
-    updateOrderLine(orderLineId: number, data: OrderLineUpdateData): Promise<void> {
-        throw new Error("Method not implemented.")
-    }
-    getDeliveryShippingLabelsAll(params: { pageSize?: number, orderId?: number, orderState?: any, hubScanned?: boolean, startDate?: Date, endDate?: Date, pickupStartDate?: Date, pickupEndDate?: Date, }): Promise<any[]> {
-        throw new Error("Method not implemented.")
-    }
-    getDeliveryShippingLabelsRange(params: { startPage: number, endPage?: number, pageSize?: number, orderId?: number, orderState?: any, hubScanned?: boolean, startDate?: Date, endDate?: Date, pickupStartDate?: Date, pickupEndDate?: Date, }): Promise<any[]> {
-        throw new Error("Method not implemented.")
-    }
-    getDeliveryShippingLabelsPage(params: { page: number, pageSize?: number, orderId?: number, orderState?: any, hubScanned?: boolean, startDate?: Date, endDate?: Date, pickupStartDate?: Date, pickupEndDate?: Date, }): Promise<any[]> {
-        throw new Error("Method not implemented.")
-    }
-    getDeliveryShippingLabel(shipmentId: number): Promise<any> {
-        throw new Error("Method not implemented.")
-    }
-    getReturnShippingLabelsAll(params: { pageSize?: number, orderId?: number, orderState?: any, hubScanned?: boolean, startDate?: Date, }): Promise<any[]> {
-        throw new Error("Method not implemented.")
-    }
-    getReturnShippingLabelsRange(params: { startPage: number, endPage?: number, pageSize?: number, orderId?: number, orderState?: any, hubScanned?: boolean, startDate?: Date, endDate?: Date, }): Promise<any[]> {
-        throw new Error("Method not implemented.")
-    }
-    getReturnShippingLabelsPage(params: { page: number, pageSize?: number, orderId?: number, orderState?: any, hubScanned?: boolean, startDate?: Date, endDate?: Date, }): Promise<any[]> {
-        throw new Error("Method not implemented.")
-    }
-    getReturnShippingLabel(shipmentId: number): Promise<any> {
-        throw new Error("Method not implemented.")
-    }
+
 
 }

@@ -1,47 +1,62 @@
 
-interface OrderLineUpdateData {
-
+export interface OrderLineUpdateData {
+    imei: string
 }
 
-interface OrderUpdateData {
-
-}
-
-
-interface ListingCreationData {
-
-}
-
-interface ListingUpdateData {
-
-
-}
-
-interface Order {
+export interface OrderUpdateData {
 
 }
 
 
-interface BuyBoxDataResult {
+export interface ListingCreationData {
 
 }
 
-interface BuyBoxData {
+export interface ListingUpdateData {
+
 
 }
 
-interface ListingsResult {
+export interface Order {
 
 }
 
-interface Listing {
+export enum Condition {
+    excellent = 10,
+    good = 10,
+    fair = 12
+}
+
+export interface BuyBoxPage {
+    totalCount: number
+    pageNum: number
+    results: BuyBoxData[]
+}
+
+export interface BuyBoxData {
+    productId: string
+    sku: string
+    quantity: number
+    price: number
+    hasBuyBox: boolean
+    priceForBuyBox: number
+    currency: string
+    condition: Condition
+    sameMerchantWinner: boolean
+}
+
+export interface ListingsResult {
 
 }
 
-interface Category {
+export interface Listing {
 
 }
 
-interface Attribute {
+export interface Category {
+
+}
+
+export interface Attribute {
 
 }

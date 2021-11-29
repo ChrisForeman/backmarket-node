@@ -1,70 +1,54 @@
+import { BuyBoxData, Category, OrderLineUpdateData } from "./types";
 
 export interface BackMarketAPIInterface {
 
     getCategoryTree(): Promise<Category[]>
 
-    getCategoryBranch(categoryId: string): Promise<Category>
+    // getCategoryBranch(categoryId: string): Promise<Category>
 
-    getListingsAll(params: { publicationState?: number, minQuantity?: number, maxQuantity?: number }): Promise<Listing[]>
+    // getListingsRange(params: { startPage: number, endPage?: number, publicationState?: number, minQuantity?: number, maxQuantity?: number, }): Promise<{ count: number, results: Listing[]>
 
-    getListingsRange(params: { startPage: number, endPage?: number, publicationState?: number, minQuantity?: number, maxQuantity?: number }): Promise<Listing[]>
+    // getListings(params: { page: number, publicationState?: number, minQuantity?: number, maxQuantity?: number, }): Promise<{ count: number, results: Listing[] }>
 
-    getListingsPage(params: { page: number, publicationState?: number, minQuantity?: number, maxQuantity?: number }): Promise<Listing[]>
+    getBuyBoxDataRange(startPage: number, endPage?: number): Promise<{ count: number, results: BuyBoxData[] }>
 
-    getBuyBoxDataAll(): Promise<BuyBoxData[]>
+    getBuyBoxData(page: number): Promise<{ count: number, results: BuyBoxData[] }>
 
-    getBuyBoxDataRange(startPage: number, endPage?: number): Promise<BuyBoxData[]>
+    // getListingById(listingId: number): Promise<Listing>
 
-    getBuyBoxDataPage(page: number): Promise<BuyBoxData[]>
+    // getListingBySku(sku: string): Promise<Listing>
 
-    getListingById(listingId: number): Promise<Listing>
+    // getOrdersRange(params: { page: number, creationDate?: Date, paymentDate?: Date, modificationDate?: Date, countryCode?: any, state?: any, pageSize?: number, }): Promise<{ count: number, results: Order[] }>
 
-    getListingBySku(sku: string): Promise<Listing>
+    // getOrders(params: { startPage: number, endPage?: number, creationDate?: Date, paymentDate?: Date, modificationDate?: Date, countryCode?: any, state?: any, pageSize?: number, }): Promise<{ count: number, results: Order[] }>
 
-    getOrdersAll(params: { creationDate?: Date, paymentDate?: Date, modificationDate?: Date, countryCode?: CountryCode, state?: OrderState, pageSize?: number }): Promise<Order>
+    // getOrder(orderId: number): Promise<Order>
 
-    getOrdersRange(params: { page: number, creationDate?: Date, paymentDate?: Date, modificationDate?: Date, countryCode?: CountryCode, state?: OrderState, pageSize?: number }): Promise<Order>
+    // getBatch(batchID: number): Promise<any>
 
-    getOrdersPage(params: { startPage: number, endPage?: number, creationDate?: Date, paymentDate?: Date, modificationDate?: Date, countryCode?: CountryCode, state?: OrderState, pageSize?: number }): Promise<Order>
+    // getRepairReturnsRange(startPage: number, endPage?: number): Promise<{ count: number, results: any[] }>
 
-    getOrder(orderId: number): Promise<Order>
+    // getRepairReturns(page: number): Promise<{ count: number, results: any[] }>
 
-    getBatch(batchID: number): Promise<Batch>
+    // createListings(data: ListingCreationData[]): Promise<void>
 
-    getRepairReturnsAll(): Promise<RepairReturn[]>
+    // updateListing(listingId: number, data: ListingUpdateData): Promise<void>
 
-    getRepairReturnsRange(startPage: number, endPage?: number): Promise<RepairReturn[]>
+    // updateListingsBatch(data: ListingUpdateData[]): Promise<void>
 
-    getRepairReturnsPage(page: number): Promise<RepairReturn[]>
-
-    //X - Create Products
-
-    createListings(data: ListingCreationData[]): Promise<void>
-
-    updateListing(listingId: number, data: ListingUpdateData): Promise<void>
-
-    updateListingsBatch(data: ListingUpdateData[]): Promise<void>
-
-    updateOrder(orderId: number, data: OrderUpdateData): Promise<void>
+    // updateOrder(orderId: number, data: OrderUpdateData): Promise<void>
 
     updateOrderLine(orderLineId: number, data: OrderLineUpdateData): Promise<void>
 
-    //X - Update Clients' invoices
+    // getDeliveryShippingLabelsRange(params: { startPage: number, endPage?: number, pageSize?: number, orderId?: number, orderState?: any, hubScanned?: boolean, startDate?: Date, endDate?: Date, pickupStartDate?: Date, pickupEndDate?: Date, }): Promise<{ count: number, results: any[] }>
 
-    getDeliveryShippingLabelsAll(params: { pageSize?: number, orderId?: number, orderState?: OrderState, hubScanned?: boolean, startDate?: Date, endDate?: Date, pickupStartDate?: Date, pickupEndDate?: Date }): Promise<DeliveryLabel[]>
+    // getDeliveryShippingLabels(params: { page: number, pageSize?: number, orderId?: number, orderState?: any, hubScanned?: boolean, startDate?: Date, endDate?: Date, pickupStartDate?: Date, pickupEndDate?: Date, }): Promise<{ count: number, results: any[] }>
 
-    getDeliveryShippingLabelsRange(params: { startPage: number, endPage?: number, pageSize?: number, orderId?: number, orderState?: OrderState, hubScanned?: boolean, startDate?: Date, endDate?: Date, pickupStartDate?: Date, pickupEndDate?: Date }): Promise<DeliveryLabel[]>
+    // getDeliveryShippingLabel(shipmentId: number): Promise<any>
 
-    getDeliveryShippingLabelsPage(params: { page: number, pageSize?: number, orderId?: number, orderState?: OrderState, hubScanned?: boolean, startDate?: Date, endDate?: Date, pickupStartDate?: Date, pickupEndDate?: Date }): Promise<DeliveryLabel[]>
+    // getReturnShippingLabelsRange(params: { startPage: number, endPage?: number, pageSize?: number, orderId?: number, orderState?: any, hubScanned?: boolean, startDate?: Date, endDate?: Date, }): Promise<{ count: number, results: any[] }>
 
-    getDeliveryShippingLabel(shipmentId: number): Promise<DeliveryLabel>
+    // getReturnShippingLabels(params: { page: number, pageSize?: number, orderId?: number, orderState?: any, hubScanned?: boolean, startDate?: Date, endDate?: Date, }): Promise<{ count: number, results: any[] }>
 
-
-    getReturnShippingLabelsAll(params: { pageSize?: number, orderId?: number, orderState?: OrderState, hubScanned?: boolean, startDate?: Date }): Promise<ReturnLabel[]>
-
-    getReturnShippingLabelsRange(params: { startPage: number, endPage?: number, pageSize?: number, orderId?: number, orderState?: OrderState, hubScanned?: boolean, startDate?: Date, endDate?: Date }): Promise<ReturnLabel[]>
-
-    getReturnShippingLabelsPage(params: { page: number, pageSize?: number, orderId?: number, orderState?: OrderState, hubScanned?: boolean, startDate?: Date, endDate?: Date }): Promise<ReturnLabel[]>
-
-    getReturnShippingLabel(shipmentId: number): Promise<ReturnLabel>
+    // getReturnShippingLabel(shipmentId: number): Promise<any>
 }

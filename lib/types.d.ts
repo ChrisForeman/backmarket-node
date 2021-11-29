@@ -1,49 +1,40 @@
-export declare enum CountryCode {
-    France = "fr-fr",
-    Spain = "es-es",
-    Germany = "de-de",
-    Austria = "de-at",
-    Italy = "it-it",
-    UnitedKingdom = "en-gb",
-    Netherlands = "nl-nl",
-    UnitedStates = "en-us"
+export interface OrderLineUpdateData {
+    imei: string;
+}
+export interface OrderUpdateData {
+}
+export interface ListingCreationData {
+}
+export interface ListingUpdateData {
+}
+export interface Order {
+}
+export declare enum Condition {
+    excellent = 10,
+    good = 10,
+    fair = 12
 }
 export interface BuyBoxPage {
-    count: number;
-    next?: string;
-    previous?: string;
-    results: BuyBoxListing[];
+    totalCount: number;
+    pageNum: number;
+    results: BuyBoxData[];
 }
-export interface BuyBoxListing {
-    product: number;
+export interface BuyBoxData {
+    productId: string;
     sku: string;
     quantity: number;
-    price: string;
-    buybox: boolean;
-    price_for_buybox: number;
+    price: number;
+    hasBuyBox: boolean;
+    priceForBuyBox: number;
     currency: string;
-    condition: number;
+    condition: Condition;
+    sameMerchantWinner: boolean;
 }
-export interface CatalogFields {
-    backmarket_id?: number;
-    ean?: string;
-    sku: string;
-    quantity?: number;
-    price?: number;
-    state?: number;
-    warranty_delay?: number;
-    comment?: string;
-    currency?: string;
-    shipper_1?: string;
-    shipping_price_1?: number;
-    shipping_delay_1?: number;
-    shipper_2?: string;
-    shipping_price_2?: number;
-    shipping_delay_2?: number;
-    shipper_3?: string;
-    shipping_price_3?: number;
-    shipping_delay_3?: number;
-    snowden?: boolean;
-    noisy_camera?: boolean;
-    images?: string[];
+export interface ListingsResult {
+}
+export interface Listing {
+}
+export interface Category {
+}
+export interface Attribute {
 }
