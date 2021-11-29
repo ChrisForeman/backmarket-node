@@ -1,4 +1,4 @@
-import { BuyBoxData, Category, OrderLineUpdateData } from "./types";
+import { BuyBoxData, Category, Order, OrderLineUpdateData } from "./types";
 
 export interface BackMarketAPIInterface {
 
@@ -22,7 +22,7 @@ export interface BackMarketAPIInterface {
 
     // getOrders(params: { startPage: number, endPage?: number, creationDate?: Date, paymentDate?: Date, modificationDate?: Date, countryCode?: any, state?: any, pageSize?: number, }): Promise<{ count: number, results: Order[] }>
 
-    // getOrder(orderId: number): Promise<Order>
+    getOrder(orderId: number): Promise<Order>
 
     // getBatch(batchID: number): Promise<any>
 

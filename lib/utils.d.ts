@@ -8,3 +8,7 @@ export declare function getCatalogString(items: CatalogFields[], delimiter: stri
  * @returns A numbered array
  */
 export declare function indexArray(startIndex: number, length: number): number[];
+/**
+ * This creates a new date object, but avoid invalid edge cases not caught by the default date constructor.
+ */
+export declare function serializeDate(value: any): Date | undefined;

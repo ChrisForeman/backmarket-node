@@ -1,7 +1,7 @@
 import { BackMarketAPIInterface } from "./api-interface"
 import * as axios from 'axios'
 import { CountryCode } from "./enums"
-import { BuyBoxData, Category, OrderLineUpdateData } from "./types"
+import { BuyBoxData, Category, Order, OrderLineUpdateData } from "./types"
 import { ResponseMapper } from "./response-mapper"
 import { indexArray } from "./utils"
 
@@ -51,7 +51,7 @@ export class BackMarketAPI implements BackMarketAPIInterface {
             const firstPage = await this.getBuyBoxData(startPage)
             const pageSize = 10
             const newStartPage = startPage + 1
-            const newEndPage = Math.trunc(firstPage.count / 10) + 1
+            const newEndPage = Math.trunc(firstPage.count / pageSize) + 1
             const pageNums = indexArray(newStartPage, newEndPage - newStartPage + 1)
             const buyBoxPages = await Promise.all(pageNums.map(page => this.getBuyBoxData(page)))
             return this.condenseBuyBoxPages(buyBoxPages)
@@ -101,6 +101,15 @@ export class BackMarketAPI implements BackMarketAPIInterface {
             data,
             { headers: this.headers }
         )
+    }
+
+    getOrder(orderId: number): Promise<Order> {
+        return axios.default.get(
+            `${this.rootEndpoint}/ws/order/${orderId}`,
+            { headers: this.headers }
+        ).then(res => {
+            return this.mapper.mapOrder(res.data)
+        })
     }
 
 

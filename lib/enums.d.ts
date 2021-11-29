@@ -1,4 +1,22 @@
-export declare type OrderState = 'Awaiting Payment' | 'Awaiting Merchant' | 'Awaiting Shipment' | 'Failed' | 'Shipped';
+export declare enum OrderState {
+    awaitPayment = "Awaiting Payment",
+    awaitMerchant = "Awaiting Merchant",
+    awaitShipment = "Awaiting Shipment",
+    failed = "Failed",
+    shipped = "Shipped",
+    unknown = "Unknown"
+}
+export declare enum OrderLineState {
+    awaitPayment = "Awaiting Payment",
+    awaitMerchant = "Awaiting Merchant",
+    awaitShipment = "Awaiting Shipment",
+    inProgress = "In Progress",
+    cancelled = "Cancelled",
+    refundedPreShip = "Refunded Pre-Shipment",
+    refundedPostShip = "Refunded Post-Shipment",
+    unpaid = "Unpaid",
+    unknown = "Unknown"
+}
 export declare enum CountryCode {
     France = "fr-fr",
     Spain = "es-es",
@@ -16,20 +34,12 @@ export declare enum ErrorCode {
     notFound = 404,
     tooManyCalls = 429
 }
-export interface BuyboxPage {
-    pageNumber: number;
-    pageCount: number;
-    nextPage?: number;
-    prevPage?: number;
-    results: BuyboxListing[];
+export declare enum Gender {
+    male = "Male",
+    female = "Female",
+    other = "Other"
 }
-export interface BuyboxListing {
-    productID: number;
-    sku: string;
-    quantity: number;
-    price: number;
-    hasBuyBox: boolean;
-    priceForBuybox: number;
-    currency: string;
-    condition: number;
+export declare enum PaymentMethod {
+    card = "CARD",
+    paypal = "PAYPAL"
 }

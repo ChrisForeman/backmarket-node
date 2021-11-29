@@ -47,3 +47,14 @@ export function indexArray(startIndex: number, length: number): number[] {
     }
     return a
 }
+
+
+/**
+ * This creates a new date object, but avoid invalid edge cases not caught by the default date constructor.
+ */
+export function serializeDate(value: any): Date | undefined {
+    if (value === null || value === undefined) { return undefined }
+    const date = new Date(value)
+    const isDate = (date as any) !== 'Invalid Date' && !isNaN((date as any))
+    return isDate ? date : undefined
+}
