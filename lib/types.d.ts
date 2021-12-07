@@ -30,7 +30,7 @@ export interface Order {
     installmentPayment: boolean;
     paymentMethod: PaymentMethod;
     salesTax: number;
-    orderLines: OrderLine;
+    orderLines: OrderLine[];
 }
 export interface OrderLine {
     id: string;
