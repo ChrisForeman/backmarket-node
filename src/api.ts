@@ -96,7 +96,7 @@ export class BackMarketAPI implements BackMarketAPIInterface {
     }
 
     async updateOrderLine(orderLineId: number, data: OrderLineUpdateData): Promise<void> {
-        await axios.default.post(
+        await axios.default.patch(
             `${this.rootEndpoint}/ws/orderlines/${orderLineId}`,
             data,
             { headers: this.headers }
