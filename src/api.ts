@@ -105,7 +105,7 @@ export class BackMarketAPI implements BackMarketAPIInterface {
 
     getOrder(orderId: number): Promise<Order> {
         return axios.default.get(
-            `${this.rootEndpoint}/ws/order/${orderId}`,
+            `${this.rootEndpoint}/ws/orders/${orderId}`,
             { headers: this.headers }
         ).then(res => {
             return this.mapper.mapOrder(res.data)
