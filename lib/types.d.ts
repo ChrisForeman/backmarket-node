@@ -10,7 +10,7 @@ export interface ListingCreationData {
 export interface ListingUpdateData {
 }
 export interface Order {
-    id: string;
+    id: number;
     shippingAddress: Address;
     billingAddress: Address;
     deliveryNoteUrl: string;
@@ -33,7 +33,7 @@ export interface Order {
     orderLines: OrderLine[];
 }
 export interface OrderLine {
-    id: string;
+    id: number;
     dateCreated: Date;
     state: OrderLineState;
     price: number;
@@ -43,11 +43,11 @@ export interface OrderLine {
     returnReason?: string;
     returnMessage?: string;
     sku: string;
-    listingId: string;
+    listingId: number;
     productTitle: string;
     quantity: number;
     brand: string;
-    productId: string;
+    productId: number;
     hasBackCare: boolean;
     backCarePrice: number;
     salesTax: number;
@@ -78,7 +78,7 @@ export interface BuyBoxPage {
     results: BuyBoxData[];
 }
 export interface BuyBoxData {
-    productId: string;
+    productId: number;
     sku: string;
     quantity: number;
     price: number;

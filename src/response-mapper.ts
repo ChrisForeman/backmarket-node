@@ -7,7 +7,7 @@ export class ResponseMapper {
 
     mapBuyBox(data: any): BuyBoxData {
         return {
-            productId: `${data.product}`,
+            productId: data.product,
             sku: data.sku,
             quantity: data.quantity,
             price: Number(data.price),
@@ -101,11 +101,11 @@ export class ResponseMapper {
             returnReason: data.return_reason === '' ? undefined : data.return_reason,
             returnMessage: data.return_message === '' ? undefined : data.return_message,
             sku: data.listing,
-            listingId: `${data.listing_id}`,
+            listingId: data.listing_id,
             productTitle: data.product,
             quantity: data.quantity,
             brand: data.brand,
-            productId: `${data.product_id}`,
+            productId: data.product_id,
             hasBackCare: data.backcare,
             backCarePrice: data.backcare_price,
             salesTax: Number(data.sales_taxes),

@@ -4,7 +4,7 @@ export interface BackMarketAPIInterface {
 
     getCategoryTree(): Promise<Category[]>
 
-    // getCategoryBranch(categoryId: string): Promise<Category>
+    // getCategoryBranch(categoryId: number): Promise<Category>
 
     // getListingsRange(params: { startPage: number, endPage?: number, publicationState?: number, minQuantity?: number, maxQuantity?: number, }): Promise<{ count: number, results: Listing[]>
 
