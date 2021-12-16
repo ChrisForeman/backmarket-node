@@ -116,8 +116,24 @@ export class ResponseMapper {
 
     private mapOrderLineState(rawValue: number): OrderLineState {
         switch (rawValue) {
+            case 0:
+                return OrderLineState.awaitPayment
+            case 1:
+                return OrderLineState.awaitMerchant
+            case 2:
+                return OrderLineState.awaitShipment
+            case 3:
+                return OrderLineState.inProgress
+            case 4:
+                return OrderLineState.cancelled
+            case 5:
+                return OrderLineState.refundedPreShip
+            case 6:
+                return OrderLineState.refundedPostShip
+            case 7:
+                return OrderLineState.unpaid
             default:
-                throw new Error('')
+                return OrderLineState.unknown
         }
     }
 
